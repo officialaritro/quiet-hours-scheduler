@@ -1,0 +1,25 @@
+{
+  "build": {
+    "env": {
+      "ENABLE_EXPERIMENTAL_COREPACK": "1"
+    }
+  },
+  "functions": {
+    "pages/api/cron/email-reminders.js": {
+      "maxDuration": 60
+    },
+    "pages/api/cron/cleanup.js": {
+      "maxDuration": 30
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/email-reminders",
+      "schedule": "*/10 * * * *"
+    },
+    {
+      "path": "/api/cron/cleanup",
+      "schedule": "0 2 * * *"
+    }
+  ]
+}
