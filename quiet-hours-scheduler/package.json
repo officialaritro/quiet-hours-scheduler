@@ -2,14 +2,12 @@
   "name": "quiet-hours-scheduler",
   "version": "1.0.0",
   "description": "A study session scheduler with email reminders",
+  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
     "setup:db": "node scripts/setup-database.js",
     "migrate": "node scripts/migrate-data.js",
     "seed": "node scripts/seed-data.js"
@@ -28,15 +26,20 @@
     "date-fns": "^2.30.0"
   },
   "devDependencies": {
-    "@testing-library/react": "^13.0.0",
-    "@testing-library/jest-dom": "^6.0.0",
-    "jest": "^29.0.0",
-    "jest-environment-jsdom": "^29.0.0",
-    "mongodb-memory-server": "^9.0.0",
     "autoprefixer": "^10.0.0",
     "postcss": "^8.0.0",
     "tailwindcss": "^3.3.0",
     "eslint": "^8.0.0",
     "eslint-config-next": "^14.0.0"
-  }
+  },
+  "keywords": [
+    "nextjs",
+    "react",
+    "study-scheduler",
+    "mongodb",
+    "supabase",
+    "email-reminders"
+  ],
+  "author": "",
+  "license": "MIT"
 }
