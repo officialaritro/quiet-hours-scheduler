@@ -1,9 +1,6 @@
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
-  experimental: {
-    serverComponentsExternalPackages: ['mongoose']
-  },
+  serverExternalPackages: ['mongoose'], // moved out of experimental
   env: {
     MONGODB_URI: process.env.MONGODB_URI,
     CRON_SECRET: process.env.CRON_SECRET,
