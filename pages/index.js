@@ -1,23 +1,28 @@
-import React from 'react';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useAuth } from '../hooks/useAuth';
-import AuthForm from '../components/auth/AuthForm';
-import Dashboard from '../components/dashboard/Dashboard';
-import { Clock } from 'lucide-react';
 
 export default function Home() {
-  const { user, loading, signIn, signOut } = useAuth();
+  const router = useRouter();
+  const { isAuthenticated, isLoading } = useAuth();
 
-  if (loading) {
+  useEffect(() => {
+    if (!isLoading) {
+      if (isAuthenticated) {
+        router.push('/dashboard');
+      } else {
+        router.push('/auth/signin');
+      }
+    }
+  }, [isAuthenticated, isLoading, router]);
+
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Clock className="w-12 h-12 text-indigo-600 animate-spin" />
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
       </div>
     );
   }
 
-  if (!user) {
-    return <AuthForm onSignIn={signIn} />;
-  }
-
-  return <Dashboard user={user} onSignOut={signOut} />;
+  return null;
 }
