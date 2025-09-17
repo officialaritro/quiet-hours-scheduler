@@ -1,67 +1,42 @@
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { connectToDatabase } from '../../../config/database';
+import { useState } from "react";
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
+export default function SignInPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  try {
-    const { email, password } = req.body;
+  async function handleSubmit(e) {
+    e.preventDefault();
 
-    // Validate input
-    if (!email || !password) {
-      return res.status(400).json({ message: 'Email and password are required' });
-    }
-
-    // Connect to database
-    const { db } = await connectToDatabase();
-    const users = db.collection('users');
-
-    // Find user by email
-    const user = await users.findOne({ email: email.toLowerCase() });
-    if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
-
-    // Check password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
-
-    // Generate JWT token
-    const token = jwt.sign(
-      { 
-        userId: user._id,
-        email: user.email,
-        name: user.name 
-      },
-      process.env.JWT_SECRET || 'default-secret-key',
-      { expiresIn: '7d' }
-    );
-
-    // Update last login
-    await users.updateOne(
-      { _id: user._id },
-      { $set: { lastLogin: new Date() } }
-    );
-
-    // Return success response
-    res.status(200).json({
-      message: 'Sign in successful',
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        preferences: user.preferences || {}
-      }
+    const res = await fetch("/api/auth/signin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
     });
 
-  } catch (error) {
-    console.error('Sign in error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    const data = await res.json();
+    console.log(data);
   }
+
+  return (
+    <div>
+      <h1>Sign In</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          required
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          required
+        />
+        <button type="submit">Sign In</button>
+      </form>
+    </div>
+  );
 }
